@@ -16,18 +16,25 @@
 
 package controllers
 
+import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
-import play.api.i18n.I18nSupport
+import models.{NormalMode, UserAnswers}
+import navigation.Navigator
+import pages.IndexPage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import views.html.IndexView
+import repositories.SessionRepository
 
-class IndexController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                                 view: IndexView
-                               ) extends FrontendBaseController with I18nSupport {
+class IndexController @Inject()(identify: IdentifierAction,
+                                getData: DataRetrievalAction,
+                                sessionRepository: SessionRepository,
+                                navigator: Navigator,
+                                val controllerComponents: MessagesControllerComponents
+                               ) extends BaseController {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+  def onPageLoad: Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    val userAnswers = request.userAnswers.fold(UserAnswers(request.internalId))(x => x)
+    sessionRepository.set(userAnswers).map(
+      _ => Redirect(navigator.nextPage(IndexPage, NormalMode, userAnswers))
+    )
   }
 }

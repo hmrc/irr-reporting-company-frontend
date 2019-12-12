@@ -14,28 +14,21 @@
  * limitations under the License.
  *@
 
-@import viewmodels.{AnswerSection, RepeaterAnswerSection, Section}
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
-    main_template: MainTemplate
+    govukLayout: templates.GovukLayoutWrapper,
+    govukSummaryList: GovukSummaryList,
+    h1: components.h1
 )
 
-@(answerSections: Seq[Section])(implicit request: Request[_], messages: Messages)
+@(answers: Seq[SummaryListRow])(implicit request: Request[_], messages: Messages, appConfig: config.FrontendAppConfig)
 
-@main_template(
-    title = messages("checkYourAnswers.title")
-    ) {
+@govukLayout(pageTitle = Some(titleNoForm("checkYourAnswers.title"))) {
 
-    @components.heading("checkYourAnswers.heading")</h1>
+    @h1("checkYourAnswers.heading")
 
-    <p>@messages("checkYourAnswers.guidance")</p>
+    <p class="govuk-body">@messages("checkYourAnswers.guidance")</p>
 
-    @for(section <- answerSections){
-        @{
-            section match {
-                case a: AnswerSection => components.answer_section(a)
-                case r: RepeaterAnswerSection => components.repeater_answer_section(r)
-            }
-        }
-    }
+    @govukSummaryList(SummaryList(answers))
 }

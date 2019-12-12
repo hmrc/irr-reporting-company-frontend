@@ -16,21 +16,28 @@
 
 package views
 
+import base.SpecBase
 import models.UserAnswers
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
-import base.SpecBase
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}
 
 import scala.reflect.ClassTag
 
 trait ViewSpecBase extends SpecBase {
 
   def viewFor[A](data: Option[UserAnswers] = None)(implicit tag: ClassTag[A]): A = {
-    val application = applicationBuilder(data).build()
-    val view = application.injector.instanceOf[A]
-    application.stop()
+    val view = app.injector.instanceOf[A]
     view
+  }
+
+  implicit class ContentExtension(x: Content) {
+    def text: String = x match {
+      case Text(text) => text
+      case HtmlContent(html) => Jsoup.parse(html.toString).text
+      case _ => ""
+    }
   }
 
   def asDocument(html: Html): Document = Jsoup.parse(html.toString())
@@ -96,9 +103,10 @@ trait ViewSpecBase extends SpecBase {
     val radio = doc.getElementById(id)
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")
     assert(radio.attr("value") == value, s"\n\nElement $id does not have value $value")
-    isChecked match {
-      case true => assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
-      case _ => assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
+    if (isChecked) {
+      assert(radio.hasAttr("checked"), s"\n\nElement $id is not checked")
+    } else {
+      assert(!radio.hasAttr("checked"), s"\n\nElement $id is checked")
     }
   }
 }
