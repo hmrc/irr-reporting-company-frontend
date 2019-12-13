@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /irr-reporting-company-frontend                    app.Routes
+->         /interest-restriction-return-reporting-company                    app.Routes
 ->         /                          health.Routes
 ->     	   /template                  template.Routes
 

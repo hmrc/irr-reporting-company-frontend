@@ -17,30 +17,40 @@
 package controllers
 
 import base.SpecBase
-import play.api.test.FakeRequest
+import controllers.actions.{DataRetrievalAction, FakeDataRetrievalActionEmptyAnswers, FakeDataRetrievalActionNone, FakeIdentifierAction}
+import mocks.MockSessionRepository
+import navigation.FakeNavigator
+import play.api.mvc.Call
 import play.api.test.Helpers._
-import views.html.IndexView
 
-class IndexControllerSpec extends SpecBase {
+class IndexControllerSpec extends SpecBase with MockSessionRepository {
+
+  def controller(dataRetrievalAction: DataRetrievalAction = FakeDataRetrievalActionEmptyAnswers) = new IndexController(
+    identify = FakeIdentifierAction,
+    getData = dataRetrievalAction,
+    sessionRepository = mockSessionRepository,
+    navigator = FakeNavigator,
+    controllerComponents = messagesControllerComponents
+  )
 
   "Index Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET with UserAnswers already supplied" in {
+      mockSet(true)
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val result = controller().onPageLoad()(fakeRequest)
 
-      val request = FakeRequest(GET, routes.IndexController.onPageLoad().url)
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some("/foo")
+    }
 
-      val result = route(application, request).value
+    "return OK and the correct view for a GET with UserAnswers NOT already supplied" in {
+      mockSet(true)
 
-      val view = application.injector.instanceOf[IndexView]
+      val result = controller(FakeDataRetrievalActionNone).onPageLoad()(fakeRequest)
 
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view()(fakeRequest, messages).toString
-
-      application.stop()
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some("/foo")
     }
   }
 }

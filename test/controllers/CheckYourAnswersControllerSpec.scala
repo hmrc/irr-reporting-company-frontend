@@ -16,47 +16,58 @@
 
 package controllers
 
+import assets.messages.CheckYourAnswersMessages
 import base.SpecBase
-import play.api.test.FakeRequest
+import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import controllers.actions._
+import nunjucks.{CheckYourAnswersTemplate, MockNunjucksRenderer}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
-import viewmodels.AnswerSection
+import play.twirl.api.Html
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase {
+class CheckYourAnswersControllerSpec extends SpecBase with MockNunjucksRenderer with FeatureSwitching {
+
+  val view = injector.instanceOf[CheckYourAnswersView]
+
+  def controller(dataRetrieval: DataRetrievalAction = FakeDataRetrievalActionEmptyAnswers) = new CheckYourAnswersController(
+    messagesApi = messagesApi,
+    identify = FakeIdentifierAction,
+    getData = dataRetrieval,
+    requireData = injector.instanceOf[DataRequiredActionImpl],
+    controllerComponents = messagesControllerComponents,
+    view = view,
+    renderer = mockNunjucksRenderer
+  )
 
   "Check Your Answers Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "If Twirl library is being used" must {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "return a OK (200) when given empty answers" in {
 
-      val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+        disable(UseNunjucks)
 
-      val result = route(application, request).value
+        val result = controller().onPageLoad()(fakeRequest)
 
-      val view = application.injector.instanceOf[CheckYourAnswersView]
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(Seq(AnswerSection(None, Seq())))(fakeRequest, messages).toString
-
-      application.stop()
+        status(result) mustEqual OK
+        titleOf(contentAsString(result)) mustEqual title(CheckYourAnswersMessages.title)
+      }
     }
 
-    "redirect to Session Expired for a GET if no existing data is found" in {
+    "If Nunjucks library is being used" must {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      "return a OK (200) when given empty answers" in {
 
-      val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad().url)
+        enable(UseNunjucks)
 
-      val result = route(application, request).value
+        mockRender(CheckYourAnswersTemplate, Json.obj("rows" -> Json.arr()))(Html("Success"))
 
-      status(result) mustEqual SEE_OTHER
+        val result = controller().onPageLoad()(fakeRequest)
 
-      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual "Success"
+      }
     }
   }
 }

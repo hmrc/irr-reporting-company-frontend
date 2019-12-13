@@ -29,17 +29,10 @@ trait ViewBehaviours extends ViewSpecBase {
 
       "rendered" must {
 
-        "have the correct banner title" in {
-
-          val doc = asDocument(view)
-          val nav = doc.getElementById("proposition-menu")
-          val span = nav.children.first
-        }
-
         "display the correct browser title" in {
 
           val doc = asDocument(view)
-          assertEqualsMessage(doc, "title", s"$messageKeyPrefix.title")
+          assertEqualsMessage(doc, "title", title(messages(s"$messageKeyPrefix.title")))
         }
 
         "display the correct page title" in {
@@ -54,10 +47,11 @@ trait ViewBehaviours extends ViewSpecBase {
           for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
-        "display language toggles" in {
-
-          val doc = asDocument(view)
-          assertRenderedById(doc, "cymraeg-switch")
+        if(frontendAppConfig.languageTranslationEnabled) {
+          "display language toggles" in {
+            val doc = asDocument(view)
+            assertRenderedById(doc, "cymraeg-switch")
+          }
         }
       }
     }
@@ -71,6 +65,18 @@ trait ViewBehaviours extends ViewSpecBase {
 
         val doc = asDocument(view)
         assertRenderedById(doc, "back-link")
+      }
+    }
+  }
+
+  def pageWithSignOutLink(view: HtmlFormat.Appendable): Unit = {
+
+    "behave like a page with a Sign Out link" must {
+
+      "have a Sign Out link" in {
+
+        val doc = asDocument(view)
+        assertRenderedByCssSelector(doc, "ul.govuk-header__navigation li:nth-of-type(1) a")
       }
     }
   }
