@@ -1,5 +1,5 @@
 
-# interest-restriction-return-frontend
+# irr-reporting-company-frontend
 
 This is a placeholder README.md for a new repository
 
