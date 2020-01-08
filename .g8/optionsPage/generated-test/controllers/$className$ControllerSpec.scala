@@ -1,150 +1,139 @@
+/*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers
 
 import base.SpecBase
+import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import controllers.actions._
 import forms.$className$FormProvider
-import models.{NormalMode, $className$, UserAnswers}
-import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.any
-import org.mockito.Mockito.when
+import models.{$className$, NormalMode, UserAnswers}
+import navigation.FakeNavigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.$className$Page
-import play.api.inject.bind
-import play.api.libs.json.{JsString, Json}
+import nunjucks.{MockNunjucksRenderer, $className$Template}
+import play.api.data.Form
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
-import views.html.$className$View
+import play.twirl.api.Html
+import uk.gov.hmrc.viewmodels.Radios
+import views.html.$className;format="decap"$View
+import uk.gov.hmrc.nunjucks.NunjucksSupport
+import nunjucks.viewmodels.RadioOptionsViewModel
 
-import scala.concurrent.Future
-
-class $className$ControllerSpec extends SpecBase with MockitoSugar {
-
-  def onwardRoute = Call("GET", "/foo")
-
-  lazy val $className;format="decap"$Route = routes.$className$Controller.onPageLoad(NormalMode).url
+class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with NunjucksSupport with FeatureSwitching {
 
   val formProvider = new $className$FormProvider()
+  val view = injector.instanceOf[$className;format="decap"$View]
   val form = formProvider()
+
+  def controller(dataRetrieval: DataRetrievalAction = FakeDataRetrievalActionEmptyAnswers) = new $className$Controller(
+    messagesApi = messagesApi,
+    sessionRepository = sessionRepository,
+    navigator = FakeNavigator,
+    identify = FakeIdentifierAction,
+    getData = dataRetrieval,
+    requireData = new DataRequiredActionImpl,
+    formProvider = new $className$FormProvider,
+    controllerComponents = messagesControllerComponents,
+    view = view,
+    renderer = mockNunjucksRenderer
+  )
+
+  def viewContext(form: Form[$className$]): JsObject = Json.toJsObject(RadioOptionsViewModel(
+    $className$.options(form),
+    form,
+    NormalMode
+  ))
 
   "$className$ Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "If rendering using the Nunjucks templating engine" must {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "return OK and the correct view for a GET" in {
 
-      val request = FakeRequest(GET, $className;format="decap"$Route)
+        enable(UseNunjucks)
 
-      val result = route(application, request).value
+        mockRender($className$Template, viewContext(form))(Html("Success"))
 
-      val view = application.injector.instanceOf[$className$View]
+        val result = controller(FakeDataRetrievalActionEmptyAnswers).onPageLoad(NormalMode)(fakeRequest)
 
-      status(result) mustEqual OK
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual "Success"
+      }
+    }
 
-      contentAsString(result) mustEqual
-        view(form, NormalMode)(fakeRequest, messages).toString
+    "If rendering using the Twirl templating engine" must {
 
-      application.stop()
+      "return OK and the correct view for a GET" in {
+
+        disable(UseNunjucks)
+
+        val result = controller(FakeDataRetrievalActionEmptyAnswers).onPageLoad(NormalMode)(fakeRequest)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, NormalMode)(fakeRequest, messages, frontendAppConfig).toString
+      }
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = UserAnswers(userAnswersId).set($className$Page, $className$.values.head).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val result = controller(FakeDataRetrievalActionGeneral(Some(userAnswers))).onPageLoad(NormalMode)(fakeRequest)
 
-      val request = FakeRequest(GET, $className;format="decap"$Route)
-
-      val view = application.injector.instanceOf[$className$View]
-
-      val result = route(application, request).value
-
-      status(result) mustEqual OK
-
-      contentAsString(result) mustEqual
-        view(form.fill($className$.values.head), NormalMode)(fakeRequest, messages).toString
-
-      application.stop()
+      status(result) mustBe OK
     }
 
     "redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
+      val request = fakeRequest.withFormUrlEncodedBody(("value", $className$.values.head.toString))
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
-          )
-          .build()
-
-      val request =
-        FakeRequest(POST, $className;format="decap"$Route)
-          .withFormUrlEncodedBody(("value", $className$.options.head.value))
-
-      val result = route(application, request).value
+      val result = controller().onSubmit(NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual onwardRoute.url
-
-      application.stop()
+      redirectLocation(result) mustBe Some("/foo")
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val request = fakeRequest.withFormUrlEncodedBody(("value", "invalid value"))
 
-      val request =
-        FakeRequest(POST, $className;format="decap"$Route)
-          .withFormUrlEncodedBody(("value", "invalid value"))
-
-      val boundForm = form.bind(Map("value" -> "invalid value"))
-
-      val view = application.injector.instanceOf[$className$View]
-
-      val result = route(application, request).value
+      val result = controller().onSubmit(NormalMode)(request)
 
       status(result) mustEqual BAD_REQUEST
-
-      contentAsString(result) mustEqual
-        view(boundForm, NormalMode)(fakeRequest, messages).toString
-
-      application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      val request = FakeRequest(GET, $className;format="decap"$Route)
-
-      val result = route(application, request).value
+      val result = controller(FakeDataRetrievalActionNone).onPageLoad(NormalMode)(fakeRequest)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
+      redirectLocation(result).value mustEqual errors.routes.SessionExpiredController.onPageLoad().url
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-      
-      val application = applicationBuilder(userAnswers = None).build()
 
-      val request =
-        FakeRequest(POST, $className;format="decap"$Route)
-          .withFormUrlEncodedBody(("value", $className$.values.head.toString))
+      val request = fakeRequest.withFormUrlEncodedBody(("value", $className$.values.head.toString))
 
-      val result = route(application, request).value
+      val result = controller(FakeDataRetrievalActionNone).onSubmit(NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
-
-      application.stop()
+      redirectLocation(result).value mustEqual errors.routes.SessionExpiredController.onPageLoad().url
     }
   }
 }
