@@ -1,30 +1,70 @@
+/*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers
 
 import base.SpecBase
-import play.api.test.FakeRequest
+import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import controllers.actions.{DataRequiredActionImpl, FakeDataRetrievalActionEmptyAnswers, FakeIdentifierAction}
 import play.api.test.Helpers._
-import views.html.$className$View
+import nunjucks.MockNunjucksRenderer
+import nunjucks.$className$Template
+import play.twirl.api.Html
+import views.html.$className;format="decap"$View
 
-class $className$ControllerSpec extends SpecBase {
+class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with FeatureSwitching {
+
+  val view = injector.instanceOf[$className;format="decap"$View]
+
+  def controller = new $className$Controller(
+    messagesApi = messagesApi,
+    identify = FakeIdentifierAction,
+    getData = FakeDataRetrievalActionEmptyAnswers,
+    requireData = new DataRequiredActionImpl,
+    controllerComponents = messagesControllerComponents,
+    view = view,
+    mockNunjucksRenderer
+  )
 
   "$className$ Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "When Nunjucks rendering is enabled" must {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "return OK and the correct view for a GET" in {
 
-      val request = FakeRequest(GET, routes.$className$Controller.onPageLoad().url)
+        enable(UseNunjucks)
 
-      val result = route(application, request).value
+        mockRender($className$Template)(Html("Success"))
 
-      val view = application.injector.instanceOf[$className$View]
+        val result = controller.onPageLoad(fakeRequest)
 
-      status(result) mustEqual OK
+        status(result) mustBe OK
+      }
+    }
 
-      contentAsString(result) mustEqual
-        view()(fakeRequest, messages).toString
+    "When Nunjucks rendering is disabled" must {
 
-      application.stop()
+      "return OK and the correct view for a GET" in {
+
+        disable(UseNunjucks)
+
+        val result = controller.onPageLoad(fakeRequest)
+
+        status(result) mustBe OK
+      }
     }
   }
 }

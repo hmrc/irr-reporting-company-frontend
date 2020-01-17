@@ -26,7 +26,7 @@ lazy val root = (project in file("."))
   .settings(
     name := appName,
     RoutesKeys.routesImport += "models._",
-    PlayKeys.playDefaultPort := 9000,
+    PlayKeys.playDefaultPort := 9260,
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",

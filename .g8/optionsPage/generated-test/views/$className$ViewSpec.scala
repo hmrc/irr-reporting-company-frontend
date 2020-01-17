@@ -1,56 +1,65 @@
 package views
 
 import forms.$className$FormProvider
-import models.{NormalMode, $className$}
+import models.{$className$, NormalMode}
 import play.api.data.Form
+import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.nunjucks.NunjucksSupport
+import uk.gov.hmrc.viewmodels.Radios
 import views.behaviours.ViewBehaviours
-import views.html.$className$View
+import views.html.$className;format="decap"$View
+import nunjucks.$className$Template
+import nunjucks.viewmodels.RadioOptionsViewModel
 
-class $className$ViewSpec extends ViewBehaviours {
+class $className;format="decap"$ViewSpec extends ViewBehaviours with NunjucksSupport {
 
   val messageKeyPrefix = "$className;format="decap"$"
 
   val form = new $className$FormProvider()()
 
-  val view = viewFor[$className$View](Some(emptyUserAnswers))
+  Seq(Nunjucks, Twirl).foreach { templatingSystem =>
 
-  def applyView(form: Form[_]): HtmlFormat.Appendable =
-    view.apply(form, NormalMode)(fakeRequest, messages)
+    s"$className $ (\$templatingSystem) view" must {
 
-  "$className$View" must {
+      def applyView(form: Form[$className$]): HtmlFormat.Appendable =
+        if (templatingSystem == Nunjucks) {
+          await(nunjucksRenderer.render($className$Template, Json.toJsObject(RadioOptionsViewModel(
+            $className$.options(form),
+            form,
+            NormalMode
+          )))(fakeRequest))
+        } else {
+          val view = viewFor[$className;format="decap"$View](Some(emptyUserAnswers))
+          view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
+        }
 
-    behave like normalPage(applyView(form), messageKeyPrefix)
+      behave like normalPage(applyView(form), messageKeyPrefix)
 
-    behave like pageWithBackLink(applyView(form))
-  }
+      behave like pageWithBackLink(applyView(form))
 
-  "$className$View" when {
+      "rendered" must {
 
-    "rendered" must {
+        "contain radio buttons for the value" in {
 
-      "contain radio buttons for the value" in {
+          val doc = asDocument(applyView(form))
 
-        val doc = asDocument(applyView(form))
-
-        for (option <- $className$.options) {
-          assertContainsRadioButton(doc, option.id, "value", option.value, false)
+          for (option <- $className$.options(form)) {
+            assertContainsRadioButton(doc, option.id.get, "value", option.value.get, false)
+          }
         }
       }
-    }
 
-    for (option <- $className$.options) {
+      for (option <- $className$.options(form)) {
 
-      s"rendered with a value of '\${option.value}'" must {
+        s"rendered with a value of '\${option.value.get}'" must {
 
-        s"have the '\${option.value}' radio button selected" in {
+          s"have the '\${option.value.get}' radio button selected" in {
 
-          val doc = asDocument(applyView(form.bind(Map("value" -> s"\${option.value}"))))
+            val formWithData = form.bind(Map("value" -> s"\${option.value.get}"))
+            val doc = asDocument(applyView(formWithData))
 
-          assertContainsRadioButton(doc, option.id, "value", option.value, true)
-
-          for (unselectedOption <- $className$.options.filterNot(o => o == option)) {
-            assertContainsRadioButton(doc, unselectedOption.id, "value", unselectedOption.value, false)
+            assertContainsRadioButton(doc, option.id.get, "value", option.value.get, true)
           }
         }
       }

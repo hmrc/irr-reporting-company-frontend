@@ -3,29 +3,37 @@ package views
 import java.time.LocalDate
 
 import forms.$className$FormProvider
-import models.{NormalMode, UserAnswers}
+import models.NormalMode
+import nunjucks.viewmodels.DateViewModel
 import play.api.data.Form
+import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
+import uk.gov.hmrc.viewmodels.Radios
 import views.behaviours.QuestionViewBehaviours
-import views.html.$className$View
+import views.html.$className;format="decap"$View
+import nunjucks.$className$Template
 
-class $className$ViewSpec extends QuestionViewBehaviours[LocalDate] {
+class $className;format="decap"$ViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   val messageKeyPrefix = "$className;format="decap"$"
 
   val form = new $className$FormProvider()()
 
-  "$className$View view" must {
+  Seq(Nunjucks, Twirl).foreach { templatingSystem =>
 
-    val application = applicationBuilder(userAnswers = Some(UserAnswers(userAnswersId))).build()
+    s"$className $ (\$templatingSystem) view" must {
 
-    val view = application.injector.instanceOf[$className$View]
+      def applyView(form: Form[_]): HtmlFormat.Appendable =
+        if (templatingSystem == Nunjucks) {
+          await(nunjucksRenderer.render($className$Template, Json.toJsObject(DateViewModel(form, NormalMode)))(fakeRequest))
+        } else {
+          val view = viewFor[$className;format="decap"$View](Some(emptyUserAnswers))
+          view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
+        }
 
-    def applyView(form: Form[_]): HtmlFormat.Appendable =
-      view.apply(form, NormalMode)(fakeRequest, messages)
+      behave like normalPage(applyView(form), messageKeyPrefix)
 
-    behave like normalPage(applyView(form), messageKeyPrefix)
-
-    behave like pageWithBackLink(applyView(form))
+      behave like pageWithBackLink(applyView(form))
+    }
   }
 }
