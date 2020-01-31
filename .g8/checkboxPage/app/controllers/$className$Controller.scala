@@ -7,14 +7,11 @@ import javax.inject.Inject
 import models.{$className$, Mode}
 import navigation.Navigator
 import pages.$className$Page
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
-import nunjucks.viewmodels.CheckboxViewModel
+import config.featureSwitch.{FeatureSwitching}
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import repositories.SessionRepository
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-import views.html.$className;format="decap"$View
-import nunjucks.{$className$Template, Renderer}
+import views.html.$className$View
 import play.api.data.Form
 import play.api.libs.json.{JsObject, Json}
 
@@ -29,20 +26,11 @@ class $className$Controller @Inject()(
                                      requireData: DataRequiredAction,
                                      formProvider: $className$FormProvider,
                                      val controllerComponents: MessagesControllerComponents,
-                                     view: $className;format="decap"$View,
-                                     renderer: Renderer
-                                   )(implicit appConfig: FrontendAppConfig) extends BaseController with NunjucksSupport with FeatureSwitching {
+                                     view: $className$View
+                                   )(implicit appConfig: FrontendAppConfig) extends BaseController with FeatureSwitching {
 
   private def viewHtml(form: Form[Set[$className$]], mode: Mode)(implicit request: Request[_]) = {
-
-    if (isEnabled(UseNunjucks)) {
-      renderer.render($className$Template, Json.toJsObject(
-        CheckboxViewModel($className$.options(form), form, mode)
-      ))
-
-    } else {
       Future.successful(view(form, mode))
-    }
   }
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
