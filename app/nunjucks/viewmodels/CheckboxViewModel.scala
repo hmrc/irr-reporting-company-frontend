@@ -21,9 +21,6 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json, OWrites}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-
-
 case class CheckboxViewModel[T](options: Seq[CheckboxItem], form: Form[Set[T]], mode: Mode)(implicit messages: Messages){
 
   val error: Option[JsObject] = form.errors.headOption.map(x => Json.obj("errorMessage" -> Json.obj("text" -> messages(x.message))))

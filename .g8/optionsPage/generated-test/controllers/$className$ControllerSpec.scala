@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import config.featureSwitch.FeatureSwitching
 import controllers.actions._
 import forms.$className$FormProvider
 import models.{$className$, NormalMode, UserAnswers}
@@ -32,7 +32,6 @@ import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.viewmodels.Radios
 import views.html.$className$View
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import nunjucks.viewmodels.RadioOptionsViewModel
 
 class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with NunjucksSupport with FeatureSwitching {

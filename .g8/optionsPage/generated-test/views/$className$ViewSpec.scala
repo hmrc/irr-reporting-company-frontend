@@ -5,11 +5,9 @@ import models.{$className$, NormalMode}
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.viewmodels.Radios
 import views.behaviours.ViewBehaviours
 import views.html.$className$View
-import nunjucks.$className$Template
 import nunjucks.viewmodels.RadioOptionsViewModel
 
 class $className$ViewSpec extends ViewBehaviours with NunjucksSupport {

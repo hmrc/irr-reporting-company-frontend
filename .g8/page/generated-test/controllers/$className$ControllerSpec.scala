@@ -17,11 +17,10 @@
 package controllers
 
 import base.SpecBase
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import config.featureSwitch.FeatureSwitching
 import controllers.actions.{DataRequiredActionImpl, FakeDataRetrievalActionEmptyAnswers, FakeIdentifierAction}
 import play.api.test.Helpers._
 import nunjucks.MockNunjucksRenderer
-import nunjucks.$className$Template
 import play.twirl.api.Html
 import views.html.$className$View
 

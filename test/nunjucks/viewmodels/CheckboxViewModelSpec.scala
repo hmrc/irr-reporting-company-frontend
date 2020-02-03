@@ -24,8 +24,6 @@ import play.api.data.Forms.set
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-
 class CheckboxViewModelSpec extends SpecBase with Mappings with NunjucksSupport {
 
   "MyNewPage" must {

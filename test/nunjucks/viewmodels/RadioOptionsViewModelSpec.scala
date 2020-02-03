@@ -24,8 +24,6 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-
 class RadioOptionsViewModelSpec extends SpecBase with Mappings with NunjucksSupport {
 
   sealed trait TestEnum

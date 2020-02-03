@@ -21,8 +21,6 @@ import forms.mappings.Mappings
 import models.NormalMode
 import play.api.data._
 import play.api.libs.json.Json
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-
 class DateViewModelSpec extends SpecBase with Mappings with NunjucksSupport {
 
   val form: Form[_] = Form("value" -> localDate(

@@ -32,7 +32,6 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import play.twirl.api.Html
 import repositories.SessionRepository
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.viewmodels.Radios
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +43,6 @@ class HelloWorldYesNoNunjucksController @Inject()(override val messagesApi: Mess
                                                   getData: DataRetrievalAction,
                                                   requireData: DataRequiredAction,
                                                   formProvider: HelloWorldYesNoFormProvider,
-                                                  renderer: Renderer,
                                                   val controllerComponents: MessagesControllerComponents
                                                  )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig) extends BaseController with NunjucksSupport {
 

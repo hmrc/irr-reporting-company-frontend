@@ -19,12 +19,11 @@ package controllers
 import java.time.{LocalDate, ZoneOffset}
 
 import base.SpecBase
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import config.featureSwitch.FeatureSwitching
 import controllers.actions._
 import forms.$className$FormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigator
-import nunjucks.viewmodels.DateViewModel
 import nunjucks.MockNunjucksRenderer
 import pages.$className$Page
 import play.api.data.Form
@@ -33,8 +32,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import models.Mode
 import play.twirl.api.Html
-import nunjucks.$className$Template
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.viewmodels.Radios
 import views.html.$className$View
 

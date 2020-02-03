@@ -21,8 +21,6 @@ import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OWrites}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-
 case class RadioOptionsViewModel[T](options: Seq[RadioItem], form: Form[T], mode: Mode)(implicit messages: Messages)
 
 

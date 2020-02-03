@@ -21,7 +21,6 @@ import forms.mappings.Mappings
 import models.NormalMode
 import play.api.data._
 import play.api.libs.json.Json
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.viewmodels.Radios
 
 class BasicFormViewModelSpec extends SpecBase with Mappings with NunjucksSupport {

@@ -23,7 +23,6 @@ import nunjucks.viewmodels.YesNoRadioViewModel
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.twirl.api.Html
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import views.behaviours.YesNoViewBehaviours
 
 class HelloWorldYesNoNunjucksViewSpec extends YesNoViewBehaviours with NunjucksSupport {

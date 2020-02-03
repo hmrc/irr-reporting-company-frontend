@@ -6,8 +6,6 @@ import models.NormalMode
 import play.api.data.Form
 import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nunjucks.NunjucksSupport
-import nunjucks.$className$Template
 import views.behaviours.IntViewBehaviours
 import views.html.$className$View
 import nunjucks.viewmodels.BasicFormViewModel

@@ -18,7 +18,6 @@ package base
 
 import config.FrontendAppConfig
 import models.UserAnswers
-import nunjucks.Renderer
 import org.jsoup.Jsoup
 import org.scalatest.TryValues
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}

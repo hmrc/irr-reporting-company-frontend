@@ -20,7 +20,6 @@ import models.Mode
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.libs.json.{Json, OWrites}
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.viewmodels.Radios
 
 case class YesNoRadioViewModel[T](form: Form[T], mode: Mode)(implicit messages: Messages)

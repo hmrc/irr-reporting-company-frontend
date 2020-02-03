@@ -2,7 +2,6 @@ package views
 
 import views.behaviours.ViewBehaviours
 import views.html.$className$View
-import nunjucks.$className$Template
 import views.{Twirl, Nunjucks}
 
 class $className$ViewSpec extends ViewBehaviours {

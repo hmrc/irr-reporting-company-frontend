@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import config.featureSwitch.FeatureSwitching
 import controllers.actions._
 import forms.$className$FormProvider
 import models.{NormalMode, UserAnswers}
@@ -28,9 +28,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import views.html.$className$View
-import nunjucks.$className$Template
 import nunjucks.MockNunjucksRenderer
 import nunjucks.viewmodels.BasicFormViewModel
 
