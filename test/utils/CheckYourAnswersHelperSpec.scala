@@ -19,7 +19,7 @@ package utils
 import base.SpecBase
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.{HelloWorldYesNoPage, HelloWorldYesNoPageNunjucks}
+import pages.HelloWorldYesNoPage
 import play.api.mvc.Call
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -63,36 +63,7 @@ class CheckYourAnswersHelperSpec extends SpecBase {
           messages("site.no"),
           routes.HelloWorldYesNoController.onPageLoad(CheckMode)
         ))
-
-      }
-    }
-
-    "For the HellowWorldYesNoPageNunjucks" must {
-
-      "get an answer from useranswers for true" in {
-
-        val helper = new CheckYourAnswersHelper(UserAnswers("id").set(HelloWorldYesNoPageNunjucks, true).get)
-
-        helper.helloWorldYesNoNunjucks mustBe Some(summaryListRow(
-          messages("helloWorldYesNoNunjucks.checkYourAnswersLabel"),
-          messages("site.yes"),
-          routes.HelloWorldYesNoNunjucksController.onPageLoad(CheckMode)
-        ))
-
-      }
-
-      "get an answer from useranswers for false" in {
-
-        val helper = new CheckYourAnswersHelper(UserAnswers("id").set(HelloWorldYesNoPageNunjucks, false).get)
-
-        helper.helloWorldYesNoNunjucks mustBe Some(summaryListRow(
-          messages("helloWorldYesNoNunjucks.checkYourAnswersLabel"),
-          messages("site.no"),
-          routes.HelloWorldYesNoNunjucksController.onPageLoad(CheckMode)
-        ))
-
       }
     }
   }
-
 }

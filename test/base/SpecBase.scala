@@ -65,6 +65,4 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
 
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
-  lazy val nunjucksRenderer: Renderer = app.injector.instanceOf[Renderer]
-
 }

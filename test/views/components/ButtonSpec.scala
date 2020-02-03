@@ -18,35 +18,28 @@ package views.components
 
 import base.SpecBase
 import org.jsoup.Jsoup
-import play.api.libs.json.Json
 import play.twirl.api.Html
 import views.html.components.button
-import views.{Nunjucks, Twirl}
 
 class ButtonSpec extends SpecBase {
 
   lazy val buttonComponent: button = app.injector.instanceOf[button]
-  lazy val twirlPhaseBanner: Html = buttonComponent("site.continue")
-  lazy val nunjucksPhaseBanner: Html =
-    await(nunjucksRenderer.render("components/button/template.njk", Json.obj("msgKey" -> "site.continue"))(fakeRequest))
+  lazy val phaseBanner: Html = buttonComponent("site.continue")
 
   object Selectors {
     val button = "button"
   }
 
-  Seq(twirlPhaseBanner -> Twirl, nunjucksPhaseBanner -> Nunjucks).foreach {
-    case (html, templatingSystem) =>
-      s"button ($templatingSystem) component" must {
+  s"button component" must {
 
-        lazy val document = Jsoup.parse(html.toString)
+    lazy val document = Jsoup.parse(phaseBanner.toString)
 
-        "Have the correct class" in {
-          document.select(Selectors.button).hasClass("govuk-button") mustBe true
-        }
+    "Have the correct class" in {
+      document.select(Selectors.button).hasClass("govuk-button") mustBe true
+    }
 
-        "Have the correct button text" in {
-          document.select(Selectors.button).text mustBe messages("site.continue")
-        }
-      }
+    "Have the correct button text" in {
+      document.select(Selectors.button).text mustBe messages("site.continue")
+    }
   }
 }

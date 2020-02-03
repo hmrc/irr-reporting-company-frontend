@@ -20,13 +20,10 @@ import assets.messages.CheckYourAnswersMessages
 import base.SpecBase
 import config.featureSwitch.FeatureSwitching
 import controllers.actions._
-import nunjucks.{CheckYourAnswersTemplate, MockNunjucksRenderer}
-import play.api.libs.json.Json
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase with MockNunjucksRenderer with FeatureSwitching {
+class CheckYourAnswersControllerSpec extends SpecBase with FeatureSwitching {
 
   val view = injector.instanceOf[CheckYourAnswersView]
 
@@ -41,32 +38,12 @@ class CheckYourAnswersControllerSpec extends SpecBase with MockNunjucksRenderer 
 
   "Check Your Answers Controller" must {
 
-    "If Twirl library is being used" must {
+    "return a OK (200) when given empty answers" in {
 
-      "return a OK (200) when given empty answers" in {
+      val result = controller().onPageLoad()(fakeRequest)
 
-        disable(UseNunjucks)
-
-        val result = controller().onPageLoad()(fakeRequest)
-
-        status(result) mustEqual OK
-        titleOf(contentAsString(result)) mustEqual title(CheckYourAnswersMessages.title)
-      }
-    }
-
-    "If Nunjucks library is being used" must {
-
-      "return a OK (200) when given empty answers" in {
-
-        enable(UseNunjucks)
-
-        mockRender(CheckYourAnswersTemplate, Json.obj("rows" -> Json.arr()))(Html("Success"))
-
-        val result = controller().onPageLoad()(fakeRequest)
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual "Success"
-      }
+      status(result) mustEqual OK
+      titleOf(contentAsString(result)) mustEqual title(CheckYourAnswersMessages.title)
     }
   }
 }

@@ -20,15 +20,13 @@ import assets.messages.SiteHeaderMessages
 import base.SpecBase
 import org.jsoup.Jsoup
 import play.twirl.api.Html
-import views.{Nunjucks, Twirl}
+import views.html
 import views.html.components.siteHeader
 
 class SiteHeaderSpec extends SpecBase {
 
   lazy val siteHeader: siteHeader = app.injector.instanceOf[siteHeader]
-  lazy val twirlPhaseBanner: Html = siteHeader()(fakeRequest, messages, frontendAppConfig)
-  lazy val nunjucksPhaseBanner: Html =
-    await(nunjucksRenderer.render("components/siteHeader.njk")(fakeRequest))
+  lazy val phaseBanner: Html = siteHeader()(fakeRequest, messages, frontendAppConfig)
 
   object Selectors {
     val govUkHomeLink = "a.govuk-header__link--homepage"
@@ -36,26 +34,23 @@ class SiteHeaderSpec extends SpecBase {
     val signOutLink = "ul.govuk-header__navigation li:nth-of-type(1) a"
   }
 
-  Seq(twirlPhaseBanner -> Twirl, nunjucksPhaseBanner -> Nunjucks).foreach {
-    case (html, templatingSystem) =>
-      s"siteHeader ($templatingSystem) component" must {
+  s"siteHeader component" must {
 
-        lazy val document = Jsoup.parse(html.toString)
+    lazy val document = Jsoup.parse(phaseBanner.toString)
 
-        "Have the correct govUk home link" in {
-          document.select(Selectors.govUkHomeLink).attr("href") mustBe controllers.routes.IndexController.onPageLoad().url
-          document.select(Selectors.govUkHomeLink).text mustBe SiteHeaderMessages.govUk
-        }
+    "Have the correct govUk home link" in {
+      document.select(Selectors.govUkHomeLink).attr("href") mustBe controllers.routes.IndexController.onPageLoad().url
+      document.select(Selectors.govUkHomeLink).text mustBe SiteHeaderMessages.govUk
+    }
 
-        "Have the correct Service Name and Link" in {
-          document.select(Selectors.serviceLink).attr("href") mustBe controllers.routes.IndexController.onPageLoad().url
-          document.select(Selectors.serviceLink).text mustBe SiteHeaderMessages.serviceName
-        }
+    "Have the correct Service Name and Link" in {
+      document.select(Selectors.serviceLink).attr("href") mustBe controllers.routes.IndexController.onPageLoad().url
+      document.select(Selectors.serviceLink).text mustBe SiteHeaderMessages.serviceName
+    }
 
-        "Have the correct Sign Out Link" in {
-          document.select(Selectors.signOutLink).attr("href") mustBe controllers.routes.SignOutController.signOut().url
-          document.select(Selectors.signOutLink).text mustBe SiteHeaderMessages.signOut
-        }
-      }
+    "Have the correct Sign Out Link" in {
+      document.select(Selectors.signOutLink).attr("href") mustBe controllers.routes.SignOutController.signOut().url
+      document.select(Selectors.signOutLink).text mustBe SiteHeaderMessages.signOut
+    }
   }
 }

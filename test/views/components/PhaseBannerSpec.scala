@@ -19,17 +19,13 @@ package views.components
 import assets.messages.PhaseBannerMessages
 import base.SpecBase
 import org.jsoup.Jsoup
-import play.api.libs.json.Json
 import play.twirl.api.Html
-import views.{Nunjucks, Twirl}
 import views.html.components.phaseBanner
 
 class PhaseBannerSpec extends SpecBase {
 
   lazy val phaseBannerView: phaseBanner = app.injector.instanceOf[phaseBanner]
-  lazy val twirlPhaseBanner: Html = phaseBannerView("alpha")(fakeRequest, messages, frontendAppConfig)
-  lazy val nunjucksPhaseBanner: Html =
-    await(nunjucksRenderer.render("components/phaseBanner/template.njk", Json.obj("phase" -> "alpha"))(fakeRequest))
+  lazy val phaseBanner: Html = phaseBannerView("alpha")(fakeRequest, messages, frontendAppConfig)
 
   object Selectors {
     val link = "a"
@@ -37,24 +33,21 @@ class PhaseBannerSpec extends SpecBase {
     val phase = "strong.govuk-tag"
   }
 
-  Seq(twirlPhaseBanner -> Twirl, nunjucksPhaseBanner -> Nunjucks).foreach {
-    case (html, templatingSystem) =>
-      s"phaseBanner ($templatingSystem) component" must {
+  s"phaseBanner component" must {
 
-        lazy val document = Jsoup.parse(html.toString)
+    lazy val document = Jsoup.parse(phaseBanner.toString)
 
-        "Have the correct phase tag" in {
-          document.select(Selectors.phase).text mustBe PhaseBannerMessages.tag
-        }
+    "Have the correct phase tag" in {
+      document.select(Selectors.phase).text mustBe PhaseBannerMessages.tag
+    }
 
-        "Have a link to the contact-frontend service" in {
-          document.select(Selectors.link).attr("href") mustBe frontendAppConfig.feedbackUrl(fakeRequest)
-          document.select(Selectors.link).text mustBe PhaseBannerMessages.link
-        }
+    "Have a link to the contact-frontend service" in {
+      document.select(Selectors.link).attr("href") mustBe frontendAppConfig.feedbackUrl(fakeRequest)
+      document.select(Selectors.link).text mustBe PhaseBannerMessages.link
+    }
 
-        "Have the correct message for the content of the banner" in {
-          document.select(Selectors.content).text mustBe PhaseBannerMessages.content
-        }
-      }
+    "Have the correct message for the content of the banner" in {
+      document.select(Selectors.content).text mustBe PhaseBannerMessages.content
+    }
   }
 }
