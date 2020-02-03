@@ -36,8 +36,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with MockNunjucksRenderer 
     getData = dataRetrieval,
     requireData = injector.instanceOf[DataRequiredActionImpl],
     controllerComponents = messagesControllerComponents,
-    view = view,
-    renderer = mockNunjucksRenderer
+    view = view
   )
 
   "Check Your Answers Controller" must {

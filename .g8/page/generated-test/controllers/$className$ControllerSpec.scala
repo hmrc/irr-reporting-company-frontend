@@ -24,7 +24,7 @@ import nunjucks.MockNunjucksRenderer
 import play.twirl.api.Html
 import views.html.$className$View
 
-class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with FeatureSwitching {
+class $className$ControllerSpec extends SpecBase with FeatureSwitching {
 
   val view = injector.instanceOf[$className$View]
 

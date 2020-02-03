@@ -34,7 +34,7 @@ import uk.gov.hmrc.viewmodels.Radios
 import views.html.$className$View
 import nunjucks.viewmodels.RadioOptionsViewModel
 
-class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with NunjucksSupport with FeatureSwitching {
+class $className$ControllerSpec extends SpecBase with FeatureSwitching {
 
   val formProvider = new $className$FormProvider()
   val view = injector.instanceOf[$className$View]
@@ -49,44 +49,17 @@ class $className$ControllerSpec extends SpecBase with MockNunjucksRenderer with 
     requireData = new DataRequiredActionImpl,
     formProvider = new $className$FormProvider,
     controllerComponents = messagesControllerComponents,
-    view = view,
-    renderer = mockNunjucksRenderer
+    view = view
   )
-
-  def viewContext(form: Form[$className$]): JsObject = Json.toJsObject(RadioOptionsViewModel(
-    $className$.options(form),
-    form,
-    NormalMode
-  ))
 
   "$className$ Controller" must {
 
-    "If rendering using the Nunjucks templating engine" must {
+    "return OK and the correct view for a GET" in {
 
-      "return OK and the correct view for a GET" in {
+      val result = controller(FakeDataRetrievalActionEmptyAnswers).onPageLoad(NormalMode)(fakeRequest)
 
-        enable(UseNunjucks)
-
-        mockRender($className$Template, viewContext(form))(Html("Success"))
-
-        val result = controller(FakeDataRetrievalActionEmptyAnswers).onPageLoad(NormalMode)(fakeRequest)
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual "Success"
-      }
-    }
-
-    "If rendering using the Twirl templating engine" must {
-
-      "return OK and the correct view for a GET" in {
-
-        disable(UseNunjucks)
-
-        val result = controller(FakeDataRetrievalActionEmptyAnswers).onPageLoad(NormalMode)(fakeRequest)
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(fakeRequest, messages, frontendAppConfig).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view(form, NormalMode)(fakeRequest, messages, frontendAppConfig).toString
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {

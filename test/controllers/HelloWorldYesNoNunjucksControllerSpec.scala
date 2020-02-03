@@ -46,8 +46,7 @@ class HelloWorldYesNoNunjucksControllerSpec extends SpecBase with MockNunjucksRe
     getData = dataRetrieval,
     requireData = injector.instanceOf[DataRequiredActionImpl],
     formProvider = formProvider,
-    controllerComponents = messagesControllerComponents,
-    renderer = mockNunjucksRenderer
+    controllerComponents = messagesControllerComponents
   )
 
   def viewContext(form: Form[Boolean]): JsObject = Json.toJsObject(YesNoRadioViewModel(form, NormalMode))
