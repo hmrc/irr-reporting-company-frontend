@@ -11,24 +11,21 @@ import views.html.$className$View
 
 class $className$ViewSpec extends CheckboxViewBehaviours[$className$] {
 
-  val messageKeyPrefix = "$className;format="decap"$"
+  val messageKeyPrefix = "$className;format="
+  decap "$"
 
   val form = new $className$FormProvider()()
 
-    s"$className$ (\$templatingSystem) view" must {
+  val view = viewFor[$className$View](Some(emptyUserAnswers))
 
-      val view = viewFor[$className$View](Some(emptyUserAnswers))
+  def applyView(form: Form[Set[$className$]]): HtmlFormat.Appendable = {
+    val view = viewFor[$className$View](Some(emptyUserAnswers))
+    view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
+  }
 
-      def applyView(form: Form[Set[$className$]]): HtmlFormat.Appendable = {
-          val view = viewFor[$className$View](Some(emptyUserAnswers))
-          view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
-        }
+  behave like normalPage(applyView(form), messageKeyPrefix)
 
-      behave like normalPage(applyView(form), messageKeyPrefix)
+  behave like pageWithBackLink(applyView(form))
 
-      behave like pageWithBackLink(applyView(form))
-
-      behave like checkboxPage(form, applyView, messageKeyPrefix, $className$.options(form))
-    }
+  behave like checkboxPage(form, applyView, messageKeyPrefix, $className$.options(form))
 }
-
