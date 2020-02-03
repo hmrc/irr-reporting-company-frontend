@@ -20,9 +20,7 @@ class $className$Controller @Inject()(override val messagesApi: MessagesApi,
                                      )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport with FeatureSwitching {
 
-  private def renderView(implicit request: Request[_]) = if(isEnabled(UseNunjucks)) {
-    renderer.render($className$Template)
-  } else {
+  private def renderView(implicit request: Request[_]) = {
     Future.successful(view())
   }
 

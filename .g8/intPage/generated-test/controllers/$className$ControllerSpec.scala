@@ -29,9 +29,9 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import views.html.$className$View
-import nunjucks.viewmodels.BasicFormViewModel
 
-class $className$ControllerSpec extends SpecBase with NunjucksSupport with FeatureSwitching with MockNunjucksRenderer {
+
+class $className$ControllerSpec extends SpecBase with FeatureSwitching {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -49,8 +49,7 @@ class $className$ControllerSpec extends SpecBase with NunjucksSupport with Featu
     requireData = new DataRequiredActionImpl,
     formProvider = new $className$FormProvider,
     controllerComponents = messagesControllerComponents,
-    view = view,
-    mockNunjucksRenderer
+    view = view
   )
 
   "$className$ Controller" must {

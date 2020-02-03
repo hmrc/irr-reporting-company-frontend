@@ -4,13 +4,12 @@ import controllers.routes
 import forms.$className$FormProvider
 import models.NormalMode
 import play.api.data.Form
-import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
 import views.behaviours.IntViewBehaviours
 import views.html.$className$View
-import nunjucks.viewmodels.BasicFormViewModel
 
-class $className$ViewSpec extends IntViewBehaviours with NunjucksSupport {
+
+class $className$ViewSpec extends IntViewBehaviours {
 
   val messageKeyPrefix = "$className;format="
   decap "$"

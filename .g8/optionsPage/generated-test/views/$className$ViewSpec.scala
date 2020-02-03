@@ -3,14 +3,10 @@ package views
 import forms.$className$FormProvider
 import models.{$className$, NormalMode}
 import play.api.data.Form
-import play.api.libs.json.Json
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.viewmodels.Radios
 import views.behaviours.ViewBehaviours
 import views.html.$className$View
-import nunjucks.viewmodels.RadioOptionsViewModel
-
-class $className$ViewSpec extends ViewBehaviours with NunjucksSupport {
+class $className$ViewSpec extends ViewBehaviours {
 
   val messageKeyPrefix = "$className;format="
   decap "$"

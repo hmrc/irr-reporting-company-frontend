@@ -2,7 +2,7 @@ package views
 
 import views.behaviours.ViewBehaviours
 import views.html.$className$View
-import views.{Twirl, Nunjucks}
+import views._
 
 class $className$ViewSpec extends ViewBehaviours {
 
@@ -12,9 +12,9 @@ class $className$ViewSpec extends ViewBehaviours {
 
   s"$className$View" must {
 
-    behave like normalPage(html, "$className;format="decap"$"
+    behave like normalPage(view, "$className;format="decap"$"
     )
 
-    behave like pageWithBackLink(html)
+    behave like pageWithBackLink(view)
   }
 }

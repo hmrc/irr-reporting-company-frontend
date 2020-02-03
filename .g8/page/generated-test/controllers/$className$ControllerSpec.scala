@@ -46,5 +46,3 @@ class $className$ControllerSpec extends SpecBase with FeatureSwitching {
     }
   }
 }
-
-}

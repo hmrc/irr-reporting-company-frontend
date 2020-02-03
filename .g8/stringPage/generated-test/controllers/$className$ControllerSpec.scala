@@ -29,9 +29,6 @@ import views.html.$className$View
 import play.api.data.Form
 import play.api.libs.json.{JsObject, Json}
 import play.twirl.api.Html
-import uk.gov.hmrc.viewmodels.Radios
-import nunjucks.viewmodels.BasicFormViewModel
-
 class $className$ControllerSpec extends SpecBase with FeatureSwitching {def onwardRoute = Call("GET", "/foo")
 
   val view = injector.instanceOf[$className$View]
@@ -47,8 +44,7 @@ class $className$ControllerSpec extends SpecBase with FeatureSwitching {def onwa
     requireData = new DataRequiredActionImpl,
     formProvider = new $className$FormProvider,
     controllerComponents = messagesControllerComponents,
-    view = view,
-    mockNunjucksRenderer
+    view = view
   )
 
   "$className$ Controller" must {

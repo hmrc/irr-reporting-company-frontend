@@ -24,16 +24,12 @@ import models.{$className$, NormalMode, UserAnswers}
 import navigation.FakeNavigator
 import org.scalatestplus.mockito.MockitoSugar
 import pages.$className$Page
-import nunjucks.{MockNunjucksRenderer, $className$Template}
 import play.api.data.Form
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import uk.gov.hmrc.viewmodels.Radios
 import views.html.$className$View
-import nunjucks.viewmodels.RadioOptionsViewModel
-
 class $className$ControllerSpec extends SpecBase with FeatureSwitching {
 
   val formProvider = new $className$FormProvider()

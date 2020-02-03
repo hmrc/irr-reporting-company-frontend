@@ -31,7 +31,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import models.Mode
 import play.twirl.api.Html
-import uk.gov.hmrc.viewmodels.Radios
 import views.html.$className$View
 
 class $className$ControllerSpec extends SpecBase with FeatureSwitching {

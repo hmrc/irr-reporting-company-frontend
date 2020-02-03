@@ -13,9 +13,6 @@ import play.api.mvc._
 import repositories.SessionRepository
 import views.html.$className$View
 import play.api.data.Form
-import play.api.libs.json.Json
-import uk.gov.hmrc.viewmodels.Radios
-
 import scala.concurrent.Future
 
 class $className;format="cap"$Controller @Inject()(
@@ -30,9 +27,7 @@ class $className;format="cap"$Controller @Inject()(
                                          view: $className$View
                                  )(implicit appConfig: FrontendAppConfig) extends BaseController with FeatureSwitching {
 
-  private def viewHtml(form: Form[Boolean], mode: Mode)(implicit request: Request[_]) = if(isEnabled(UseNunjucks)) {
-      renderer.render($className$Template, Json.toJsObject(YesNoRadioViewModel(form, mode)))
-    } else {
+  private def viewHtml(form: Form[Boolean], mode: Mode)(implicit request: Request[_]) = {
       Future.successful(view(form, mode))
     }
 

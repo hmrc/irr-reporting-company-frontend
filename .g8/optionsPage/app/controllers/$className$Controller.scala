@@ -8,14 +8,11 @@ import javax.inject.Inject
 import models.{$className$, Mode}
 import navigation.Navigator
 import pages.$className$Page
-import nunjucks.viewmodels.RadioOptionsViewModel
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import repositories.SessionRepository
 import views.html.$className$View
 import play.api.data.Form
-import play.api.libs.json.Json
-
 import scala.concurrent.Future
 
 class $className;format="cap"$Controller @Inject()(
@@ -30,13 +27,7 @@ class $className;format="cap"$Controller @Inject()(
                                   view: $className$View
                                  )(implicit appConfig: FrontendAppConfig) extends BaseController with FeatureSwitching {
 
-  private def viewHtml(form: Form[$className$], mode: Mode)(implicit request: Request[_]) = if(isEnabled(UseNunjucks)) {
-    renderer.render($className$Template, Json.toJsObject(RadioOptionsViewModel(
-      $className$.options(form),
-      form,
-      mode
-    )))
-  } else {
+  private def viewHtml(form: Form[$className$], mode: Mode)(implicit request: Request[_]) = {
     Future.successful(view(form, mode))
   }
 
