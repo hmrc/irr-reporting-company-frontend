@@ -26,8 +26,6 @@ import pages.$className$Page
 import play.api.mvc.Call
 import play.api.test.Helpers._
 import views.html.$className$View
-import nunjucks.MockNunjucksRenderer
-import nunjucks.viewmodels.YesNoRadioViewModel
 import play.api.data.Form
 import play.api.libs.json.{JsObject, Json}
 import play.twirl.api.Html

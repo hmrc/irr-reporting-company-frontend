@@ -14,16 +14,7 @@ class $className$ViewSpec extends QuestionViewBehaviours[LocalDate] {
 
   val messageKeyPrefix = "$className;format="decap"$"
 
-  val form = new $className$FormProvider()()
-
-  Seq(Nunjucks, Twirl).foreach { templatingSystem =>
-
-    s"$className $ (\$templatingSystem) view" must {
-
-      def applyView(form: Form[_]): HtmlFormat.Appendable =
-        if (templatingSystem == Nunjucks) {
-          await(nunjucksRenderer.render($className$Template, Json.toJsObject(DateViewModel(form, NormalMode)))(fakeRequest))
-        } else {
+  val form = new $className$FormProvider()()def applyView(form: Form[_]): HtmlFormat.Appendable = {
           val view = viewFor[$className$View](Some(emptyUserAnswers))
           view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
         }
@@ -32,5 +23,3 @@ class $className$ViewSpec extends QuestionViewBehaviours[LocalDate] {
 
       behave like pageWithBackLink(applyView(form))
     }
-  }
-}

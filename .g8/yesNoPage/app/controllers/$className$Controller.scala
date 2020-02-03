@@ -12,7 +12,6 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import repositories.SessionRepository
 import views.html.$className$View
-import nunjucks.viewmodels.YesNoRadioViewModel
 import play.api.data.Form
 import play.api.libs.json.Json
 import uk.gov.hmrc.viewmodels.Radios

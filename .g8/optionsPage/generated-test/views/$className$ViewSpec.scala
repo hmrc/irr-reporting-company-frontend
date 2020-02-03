@@ -12,54 +12,41 @@ import nunjucks.viewmodels.RadioOptionsViewModel
 
 class $className$ViewSpec extends ViewBehaviours with NunjucksSupport {
 
-  val messageKeyPrefix = "$className;format="decap"$"
+  val messageKeyPrefix = "$className;format="
+  decap "$"
 
   val form = new $className$FormProvider()()
+  def applyView(form: Form[$className$]): HtmlFormat.Appendable = {
+    val view = viewFor[$className$View](Some(emptyUserAnswers))
+    view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
+  }
 
-  Seq(Nunjucks, Twirl).foreach { templatingSystem =>
+  behave like normalPage(applyView(form), messageKeyPrefix)
 
-    s"$className $ (\$templatingSystem) view" must {
+  behave like pageWithBackLink(applyView(form))
 
-      def applyView(form: Form[$className$]): HtmlFormat.Appendable =
-        if (templatingSystem == Nunjucks) {
-          await(nunjucksRenderer.render($className$Template, Json.toJsObject(RadioOptionsViewModel(
-            $className$.options(form),
-            form,
-            NormalMode
-          )))(fakeRequest))
-        } else {
-          val view = viewFor[$className$View](Some(emptyUserAnswers))
-          view.apply(form, NormalMode)(fakeRequest, messages, frontendAppConfig)
-        }
+  "rendered" must {
 
-      behave like normalPage(applyView(form), messageKeyPrefix)
+    "contain radio buttons for the value" in {
 
-      behave like pageWithBackLink(applyView(form))
-
-      "rendered" must {
-
-        "contain radio buttons for the value" in {
-
-          val doc = asDocument(applyView(form))
-
-          for (option <- $className$.options(form)) {
-            assertContainsRadioButton(doc, option.id.get, "value", option.value.get, false)
-          }
-        }
-      }
+      val doc = asDocument(applyView(form))
 
       for (option <- $className$.options(form)) {
+        assertContainsRadioButton(doc, option.id.get, "value", option.value.get, false)
+      }
+    }
+  }
 
-        s"rendered with a value of '\${option.value.get}'" must {
+  for (option <- $className$.options(form)) {
 
-          s"have the '\${option.value.get}' radio button selected" in {
+    s"rendered with a value of '\${option.value.get}'" must {
 
-            val formWithData = form.bind(Map("value" -> s"\${option.value.get}"))
-            val doc = asDocument(applyView(formWithData))
+      s"have the '\${option.value.get}' radio button selected" in {
 
-            assertContainsRadioButton(doc, option.id.get, "value", option.value.get, true)
-          }
-        }
+        val formWithData = form.bind(Map("value" -> s"\${option.value.get}"))
+        val doc = asDocument(applyView(formWithData))
+
+        assertContainsRadioButton(doc, option.id.get, "value", option.value.get, true)
       }
     }
   }

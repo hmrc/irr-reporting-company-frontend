@@ -24,7 +24,6 @@ import controllers.actions._
 import forms.$className$FormProvider
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigator
-import nunjucks.MockNunjucksRenderer
 import pages.$className$Page
 import play.api.data.Form
 import play.api.libs.json.{JsObject, Json}

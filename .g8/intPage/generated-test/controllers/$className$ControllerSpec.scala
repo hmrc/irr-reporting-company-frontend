@@ -29,7 +29,6 @@ import play.api.mvc.Call
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import views.html.$className$View
-import nunjucks.MockNunjucksRenderer
 import nunjucks.viewmodels.BasicFormViewModel
 
 class $className$ControllerSpec extends SpecBase with NunjucksSupport with FeatureSwitching with MockNunjucksRenderer {
