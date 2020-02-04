@@ -18,15 +18,12 @@ package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import config.featureSwitch.{FeatureSwitching, UseNunjucks}
+import config.featureSwitch.FeatureSwitching
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import nunjucks.{CheckYourAnswersTemplate, Renderer}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import uk.gov.hmrc.nunjucks.NunjucksSupport
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import utils.CheckYourAnswersHelper
 import views.html.CheckYourAnswersView
@@ -39,10 +36,9 @@ class CheckYourAnswersController @Inject()(
                                             getData: DataRetrievalAction,
                                             requireData: DataRequiredAction,
                                             val controllerComponents: MessagesControllerComponents,
-                                            view: CheckYourAnswersView,
-                                            renderer: Renderer
+                                            view: CheckYourAnswersView
                                           )(implicit ec: ExecutionContext, appConfig: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport with NunjucksSupport with FeatureSwitching {
+  extends FrontendBaseController with I18nSupport with FeatureSwitching {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
@@ -50,19 +46,11 @@ class CheckYourAnswersController @Inject()(
       val checkYourAnswersHelper = new CheckYourAnswersHelper(request.userAnswers)
 
       val sections = Seq(
-        checkYourAnswersHelper.helloWorldYesNo,
-        checkYourAnswersHelper.helloWorldYesNoNunjucks
+        checkYourAnswersHelper.helloWorldYesNo
       ).flatten
 
       renderView(sections).map(Ok(_))
   }
 
-  private def renderView(answers: Seq[SummaryListRow])(implicit request: Request[_]): Future[Html] =
-    if(isEnabled(UseNunjucks)) {
-      renderer.render(CheckYourAnswersTemplate, Json.obj(
-        "rows" -> answers
-      ))
-    } else {
-      Future.successful(view(answers))
-    }
+  private def renderView(answers: Seq[SummaryListRow])(implicit request: Request[_]): Future[Html] = Future.successful(view(answers))
 }

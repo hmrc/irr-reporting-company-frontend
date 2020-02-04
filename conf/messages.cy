@@ -52,8 +52,3 @@ helloWorldYesNo.error.required = Select yes if you want to say Hello World
 helloWorldYesNo.title = Would you like to say Hello World? (Twirl Style)
 helloWorldYesNo.heading = Would you like to say Hello World? (Twirl Style)
 helloWorldYesNo.checkYourAnswersLabel = Would you like to say Hello World? (Twirl Style)
-
-helloWorldYesNoNunjucks.title = Would you like to say Hello World? (Nunjucks Style)
-helloWorldYesNoNunjucks.heading = Would you like to say Hello World? (Nunjucks Style)
-helloWorldYesNoNunjucks.checkYourAnswersLabel = Would you like to say Hello World? (Nunjucks Style)
-helloWorldYesNoNunjucks.error.required = Select yes if you want to say Hello World (Nunjucks Style)

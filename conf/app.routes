@@ -22,11 +22,6 @@ POST       /hello-world-twirl                           controllers.HelloWorldYe
 GET        /hello-world-twirl/change                    controllers.HelloWorldYesNoController.onPageLoad(mode: Mode = CheckMode)
 POST       /hello-world-twirl/change                    controllers.HelloWorldYesNoController.onSubmit(mode: Mode = CheckMode)
 
-GET        /hello-world-nunjucks                        controllers.HelloWorldYesNoNunjucksController.onPageLoad(mode: Mode = NormalMode)
-POST       /hello-world-nunjucks                        controllers.HelloWorldYesNoNunjucksController.onSubmit(mode: Mode = NormalMode)
-GET        /hello-world-nunjucks/change                 controllers.HelloWorldYesNoNunjucksController.onPageLoad(mode: Mode = CheckMode)
-POST       /hello-world-nunjucks/change                 controllers.HelloWorldYesNoNunjucksController.onSubmit(mode: Mode = CheckMode)
-
 ### Check Your Answers Controller
 ### -----------------------------
 GET        /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
