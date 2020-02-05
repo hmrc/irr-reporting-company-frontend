@@ -10,12 +10,9 @@ GET        /sign-out                                    controllers.SignOutContr
 GET        /this-service-has-been-reset                 controllers.errors.SessionExpiredController.onPageLoad
 GET        /unauthorised                                controllers.errors.UnauthorisedController.onPageLoad
 
-
-
 ### Main Journey Controllers
 ### ------------------------
 GET        /                                            controllers.IndexController.onPageLoad
-
 
 GET        /hello-world-twirl                           controllers.HelloWorldYesNoController.onPageLoad(mode: Mode = NormalMode)
 POST       /hello-world-twirl                           controllers.HelloWorldYesNoController.onSubmit(mode: Mode = NormalMode)
