@@ -11,8 +11,8 @@ export kebabClassName=\$(sed --expression 's/\([^A-Z]\)\([A-Z0-9]\)/\1-\2/g' --e
 echo "GET        /\$kebabClassName                       controllers.$className$Controller.onPageLoad(mode: Mode = NormalMode)" >> ../conf/app.routes
 echo "POST       /\$kebabClassName                        controllers.$className$Controller.onSubmit(mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /\$kebabClassName-change                  controllers.$className$Controller.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /\$kebabClassName-change                  controllers.$className$Controller.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /\$kebabClassName/change                  controllers.$className$Controller.onPageLoad(mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /\$kebabClassName/change                  controllers.$className$Controller.onSubmit(mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to English conf.messages"
 echo "" >> ../conf/messages.en
